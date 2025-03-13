@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 Smash The Ugly Makima! 🎀</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: "Comic Sans MS", sans-serif;
+            background-color: #fce4ec;
+            color: #ff4081;
+            overflow: hidden;
+        }
+        #message-container, #game-container, #bday-message {
+            display: none;
+            margin-top: 30px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ff80ab;
+            border-radius: 10px;
+            background-color: #fff0f5;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ff4081;
+        }
+        #gameCanvas {
+            background-color: #ffccdc;
+            border: 2px solid #ff4081;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>🔒 BRO, ENTER SECRET CODE TO UNLOCK THE SURPRISE 🎀</h2>
+    <p>(Hint: 👃She said she was 12👃)
+<p>(she's 18 now)</p>
+    <input type="text" id="secretCode" placeholder="Type the magic word...">
+    <button onclick="checkCode()">Unlock</button>
+
+    <div id="message-container">
+        <h2>🎀 Smash the Rendang! 🎀</h2>
+        <p>Tap to destroy these unholy abominations. 💀</p>
+        <canvas id="gameCanvas" width="300" height="400"></canvas>
+        <button onclick="restartGame()">Retry</button>
+    </div>
+
+    <div id="bday-message">
+        <h2>🎀 HAPPY BDAY, POOKIE! 🎂</h2>
+        <p>✨ BRO, YOU'RE 18. LEGALLY AN ADULT, GOOD LUCK 🫡✨</p>
+        <p>💖 May your WiFi be stable, your naps be long, and your pulls be wangy 📶</p>
+        <p>🎁 Your gift? My eternal support and questionable life advice. No refunds.</p>
+        <p>🌸 Eat cake, cause chaos, and love Aki 🎀</p>
+        <img src="https://media4.giphy.com/media/d0VOSmcjtiPOkekECg/giphy.gif" width="250">
+    </div>
+
+    <script>
+        function checkCode() {
+            let code = document.getElementById("secretCode").value;
+            if (code === "im18") {
+                document.getElementById("message-container").style.display = "block";
+                startGame();
+            } else {
+                alert("❌ Nah bro, wrong code. Try again 💀");
+            }
+        }
+
+        let canvas = document.getElementById("gameCanvas");
+        let ctx = canvas.getContext("2d");
+        let makima = new Image();
+        makima.src = "https://imgur.com/MxcAKha.png"; // Your Makima image URL
+        let enemies = [];
+        let score = 0;
+
+        function spawnMakima() {
+            let x = Math.random() * (canvas.width - 50);
+            let y = Math.random() * (canvas.height - 50);
+            enemies.push({ x, y });
+        }
+
+        function drawMakima() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            enemies.forEach(enemy => ctx.drawImage(makima, enemy.x, enemy.y, 50, 50));
+        }
+
+        function smashMakima(event) {
+            let rect = canvas.getBoundingClientRect();
+            let clickX = event.clientX - rect.left;
+            let clickY = event.clientY - rect.top;
+
+            enemies = enemies.filter(enemy => {
+                let hit = clickX > enemy.x && clickX < enemy.x + 50 && clickY > enemy.y && clickY < enemy.y + 50;
+                if (hit) score++;
+                return !hit;
+            });
+
+            drawMakima();
+            if (score >= 10) winGame();
+        }
+
+        function winGame() {
+            document.getElementById("message-container").style.display = "none";
+            document.getElementById("bday-message").style.display = "block";
+        }
+
+        function startGame() {
+            enemies = [];
+            score = 0;
+            for (let i = 0; i < 10; i++) spawnMakima();
+            drawMakima();
+        }
+
+        function restartGame() {
+            document.getElementById("bday-message").style.display = "none";
+            document.getElementById("message-container").style.display = "block";
+            startGame();
+        }
+
+        canvas.addEventListener("click", smashMakima);
+    </script>
+
+</body>
+</html>
